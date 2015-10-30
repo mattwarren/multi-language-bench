@@ -38,8 +38,10 @@ namespace MultiLanguageBench.lsg
      *   loop-3    1                1
      *     loop-2  0                2
      */
-    public class LSG {
-        public LSG() {
+    public class LSG
+    {
+        public LSG()
+        {
             loopCounter = 0;
             loops = new List<SimpleLoop>();
             root = new SimpleLoop();
@@ -48,21 +50,25 @@ namespace MultiLanguageBench.lsg
             addLoop(root);
         }
 
-        public SimpleLoop createNewLoop() {
+        public SimpleLoop createNewLoop()
+        {
             SimpleLoop loop = new SimpleLoop();
             loop.setCounter(loopCounter++);
             return loop;
         }
 
-        public void addLoop(SimpleLoop loop) {
+        public void addLoop(SimpleLoop loop)
+        {
             loops.Add(loop);
         }
 
-        public void dump() {
+        public void dump()
+        {
             dumpRec(root, 0);
         }
 
-        private void dumpRec(SimpleLoop loop, int indent) {
+        private void dumpRec(SimpleLoop loop, int indent)
+        {
             // Simplified for readability purposes.
             loop.dump(indent);
 
@@ -70,13 +76,17 @@ namespace MultiLanguageBench.lsg
                 dumpRec(liter, indent + 1);
         }
 
-        public void calculateNestingLevel() {
+        public void calculateNestingLevel()
+        {
             // link up all 1st level loops to artificial root node.
-            foreach (SimpleLoop liter in loops) {
-                if (liter.isRoot()) {
+            foreach (SimpleLoop liter in loops)
+            {
+                if (liter.isRoot())
+                {
                     continue;
                 }
-                if (liter.getParent() == null) {
+                if (liter.getParent() == null)
+                {
                     liter.setParent(root);
                 }
             }
@@ -85,9 +95,11 @@ namespace MultiLanguageBench.lsg
             calculateNestingLevelRec(root, 0);
         }
 
-        public void calculateNestingLevelRec(SimpleLoop loop, int depth) {
+        public void calculateNestingLevelRec(SimpleLoop loop, int depth)
+        {
             loop.setDepthLevel(depth);
-            foreach (SimpleLoop liter in loop.getChildren()) {
+            foreach (SimpleLoop liter in loop.getChildren())
+            {
                 calculateNestingLevelRec(liter, depth + 1);
 
                 loop.setNestingLevel(Math.Max(loop.getNestingLevel(),
@@ -95,10 +107,12 @@ namespace MultiLanguageBench.lsg
             }
         }
 
-        public int getNumLoops() {
+        public int getNumLoops()
+        {
             return loops.Count;
         }
-        public SimpleLoop getRoot() {
+        public SimpleLoop getRoot()
+        {
             return root;
         }
 
