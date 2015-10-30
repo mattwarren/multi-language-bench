@@ -1,3 +1,7 @@
 *.exe
 *.class
 *.txt
+**/obj/
+**/bin/
+*.suo
+*.user
