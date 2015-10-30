@@ -19,7 +19,7 @@
  * @author matt warren (from the Java port by rhundt)
  */
 
-using java.util.*;
+using System.Collections.Generic;
 
 namespace MultiLanguageBench.cfg
 {
@@ -34,21 +34,21 @@ namespace MultiLanguageBench.cfg
         public CFG()
         {
             startNode = null;
-            basicBlockMap = new HashMap<Integer, BasicBlock>();
-            edgeList = new ArrayList<BasicBlockEdge>();
+            basicBlockMap = new Dictionary<int, BasicBlock>();
+            edgeList = new List<BasicBlockEdge>();
         }
 
         public BasicBlock createNode(int name)
         {
             BasicBlock node;
-            if (!basicBlockMap.containsKey(name))
+            if (!basicBlockMap.ContainsKey(name))
             {
                 node = new BasicBlock(name);
-                basicBlockMap.put(name, node);
+                basicBlockMap.Add(name, node);
             }
             else
             {
-                node = basicBlockMap.get(name);
+                node = basicBlockMap[name];
             }
 
             if (getNumNodes() == 1)
@@ -61,7 +61,7 @@ namespace MultiLanguageBench.cfg
 
         public void dump()
         {
-            for (BasicBlock bb : basicBlockMap.values())
+            foreach (BasicBlock bb in basicBlockMap.Values)
             {
                 bb.dump();
             }
@@ -69,7 +69,7 @@ namespace MultiLanguageBench.cfg
 
         public void addEdge(BasicBlockEdge edge)
         {
-            edgeList.add(edge);
+            edgeList.Add(edge);
         }
 
         public int getNumNodes()
@@ -92,12 +92,12 @@ namespace MultiLanguageBench.cfg
             return edge.getSrc();
         }
 
-        public Map<Integer, BasicBlock> getBasicBlocks()
+        public Dictionary<int, BasicBlock> getBasicBlocks()
         {
             return basicBlockMap;
         }
 
-        private Map<Integer, BasicBlock> basicBlockMap;
+        private Dictionary<int, BasicBlock> basicBlockMap;
         private BasicBlock startNode;
         private List<BasicBlockEdge> edgeList;
     };
