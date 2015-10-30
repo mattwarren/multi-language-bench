@@ -26,11 +26,10 @@
  * @author matt warren (from the Java port by rhundt)
  */
 
-using cfg.BasicBlock;
-using cfg.BasicBlockEdge;
-using cfg.CFG;
-using havlakloopfinder.HavlakLoopFinder;
-using lsg.LSG;
+using MultiLanguageBench.cfg;
+using MultiLanguageBench.havlakloopfinder;
+using MultiLanguageBench.lsg;
+using System;
 
 namespace MultiLanguageBench
 {
@@ -90,33 +89,32 @@ namespace MultiLanguageBench
 
         public void getMem()
         {
-            Runtime runtime = Runtime.getRuntime();
-            long val = runtime.totalMemory() / 1024;
-            System.out.println("  Total Memory: " + val + " KB");
+            long val = GC.GetTotalMemory(forceFullCollection: false) / 1024;
+            Console.WriteLine("  Total Memory: " + val + " KB");
         }
 
         public static void main(String[] args)
         {
-            System.out.println("Welcome to LoopTesterApp, C# edition");
+            Console.WriteLine("Welcome to LoopTesterApp, C# edition");
 
-            System.out.println("Constructing App...");
+            Console.WriteLine("Constructing App...");
             LoopTesterApp app = new LoopTesterApp();
             app.getMem();
 
-            System.out.println("Constructing Simple CFG...");
+            Console.WriteLine("Constructing Simple CFG...");
             app.cfg.createNode(0);
             app.buildBaseLoop(0);
             app.cfg.createNode(1);
             new BasicBlockEdge(app.cfg, 0, 2);
 
-            System.out.println("15000 dummy loops");
+            Console.WriteLine("15000 dummy loops");
             for (int dummyloop = 0; dummyloop < 15000; dummyloop++)
             {
                 HavlakLoopFinder finder = new HavlakLoopFinder(app.cfg, app.lsg);
                 finder.findLoops();
             }
 
-            System.out.println("Constructing CFG...");
+            Console.WriteLine("Constructing CFG...");
             int n = 2;
 
             for (int parlooptrees = 0; parlooptrees < 10; parlooptrees++)
@@ -141,26 +139,26 @@ namespace MultiLanguageBench
             }
 
             app.getMem();
-            System.out.format("Performing Loop Recognition\n1 Iteration\n");
-            HavlakLoopFinder finder = new HavlakLoopFinder(app.cfg, app.lsg);
-            finder.findLoops();
+            Console.Write("Performing Loop Recognition\n1 Iteration\n");
+            HavlakLoopFinder finder1 = new HavlakLoopFinder(app.cfg, app.lsg);
+            finder1.findLoops();
             app.getMem();
 
-            System.out.println("Another 50 iterations...");
+            Console.WriteLine("Another 50 iterations...");
             for (int i = 0; i < 50; i++)
             {
-                System.out.format(".");
+                Console.Write(".");
                 HavlakLoopFinder finder2 = new HavlakLoopFinder(app.cfg, new LSG());
                 finder2.findLoops();
             }
 
-            System.out.println("");
+            Console.WriteLine("");
             app.getMem();
-            System.out.println("# of loops: " + app.lsg.getNumLoops() +
+            Console.WriteLine("# of loops: " + app.lsg.getNumLoops() +
                                " (including 1 artificial root node)");
-            System.out.println("# of BBs  : " + BasicBlock.getNumBasicBlocks());
-            System.out.println("# max time: " + finder.getMaxMillis());
-            System.out.println("# min time: " + finder.getMinMillis());
+            Console.WriteLine("# of BBs  : " + BasicBlock.getNumBasicBlocks());
+            Console.WriteLine("# max time: " + finder1.getMaxMillis());
+            Console.WriteLine("# min time: " + finder1.getMinMillis());
             app.lsg.calculateNestingLevel();
             //app.lsg.Dump();
         }
