@@ -1,0 +1,1 @@
+TimeMem c:\Program Files (x86)\Java\jdk1.7.0_55\bin\java.exe -Xss15500k LoopTesterApp
