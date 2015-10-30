@@ -18,8 +18,9 @@
  * @author matt warren (from the Java port by rhundt)
  */
 
-using cfg.BasicBlock;
-using java.util.*;
+using MultiLanguageBench.cfg;
+using System;
+using System.Collections.Generic;
 
 namespace MultiLanguageBench.lsg
 {
@@ -35,100 +36,49 @@ namespace MultiLanguageBench.lsg
      * a candidate for transformations, and what not.
      */
     public class SimpleLoop {
-      public static class ObjectSet<T> implements Iterable<T> {
-        Object[] arr;
-        int size;
-        static int total = 0;
-        static int resize = 0;
-        static {
-          Runtime.getRuntime().addShutdownHook(new Thread() {
-              @Override public void run() {
-                System.out.println(total + " = total");
-                System.out.println(resize + " = resize");
-              }
-            });
-        }
-        ObjectSet() {
-          total++;
-          arr = new Object[2];
-          size = 0;
-        }
-        boolean add(T e) {
-          for (int i = 0; i < size; i++) {
-            if (arr[i] == e) {
-              return false;
-            }
-          }
-          if (size == arr.length) {
-            resize++;
-            Object[] old = arr;
-            arr = new Object[arr.length << 1];
-            System.arraycopy(old, 0, arr, 0, old.length);
-          }
-          arr[size] = e;
-          size++;
-          return true;
-        }
-
-        int size() { return size; }
-        @Override public Iterator<T> iterator() {
-          return new Iterator<T>() {
-            int curr = 0;
-            @Override public boolean hasNext() {
-              return curr != size;
-            }
-            @SuppressWarnings("unchecked") @Override public T next() {
-              return (T) arr[curr++];
-            }
-            @Override public void remove() {
-              throw new UnsupportedOperationException();
-            }
-          };
-        }
-      }
       public SimpleLoop() {
         parent = null;
-        isRoot = false;
+        isRootField = false;
         isReducible  = true;
         nestingLevel = 0;
         depthLevel   = 0;
-        basicBlocks  = new ObjectSet<BasicBlock>();
-        children     = new ObjectSet<SimpleLoop>();
+        basicBlocks  = new List<BasicBlock>();
+        children     = new List<SimpleLoop>();
       }
 
       public void addNode(BasicBlock bb) {
-        basicBlocks.add(bb);
+        basicBlocks.Add(bb);
       }
 
       public void addChildLoop(SimpleLoop loop) {
-        children.add(loop);
+        children.Add(loop);
       }
 
       public void dump(int indent) {
         for (int i = 0; i < indent; i++)
-          System.out.format("  ");
+          Console.Write("  ");
 
-        System.out.format("loop-%d nest: %d depth %d %s",
+            Console.Write("loop-{0} nest: {1} depth {2} {3}",
                           counter, nestingLevel, depthLevel,
                           isReducible ? "" : "(Irreducible) ");
-        if (getChildren().size() != 0) {
-          System.out.format("Children: ");
-          for (SimpleLoop loop : getChildren()) {
-            System.out.format("loop-%d ", loop.getCounter());
+        if (getChildren().Count != 0) {
+                Console.Write("Children: ");
+          foreach (SimpleLoop loop in getChildren()) {
+                    Console.Write("loop-{0} ", loop.getCounter());
           }
         }
-        if (basicBlocks.size() != 0) {
-          System.out.format("(");
-          for (BasicBlock bb : basicBlocks) {
-            System.out.format("BB#%d%s", bb.getName(), header == bb ? "* " : " ");
+        if (basicBlocks.Count != 0) {
+                Console.Write("(");
+          foreach (BasicBlock bb in basicBlocks) {
+                    Console.Write("BB#{0}{1}", bb.getName(), header == bb ? "* " : " ");
           }
-          System.out.format("\b)");
+                Console.Write("\b)");
         }
-        System.out.format("\n");
+            Console.Write("\n");
       }
 
       // Getters/Setters
-      public ObjectSet<SimpleLoop> getChildren() {
+      public List<SimpleLoop> getChildren() {
         return children;
       }
       public SimpleLoop   getParent() {
@@ -143,19 +93,19 @@ namespace MultiLanguageBench.lsg
       public int          getCounter() {
         return counter;
       }
-      public boolean      isRoot() {   // Note: fct and var are same!
-        return isRoot;
+      public bool         isRoot() {   // Note: fct and var are same!
+        return isRootField;
       }
       public void setParent(SimpleLoop parent) {
         this.parent = parent;
         this.parent.addChildLoop(this);
       }
       public void setHeader(BasicBlock bb) {
-        basicBlocks.add(bb);
+        basicBlocks.Add(bb);
         header = bb;
       }
       public void setIsRoot() {
-        isRoot = true;
+        isRootField = true;
       }
       public void setCounter(int value) {
         counter = value;
@@ -169,17 +119,17 @@ namespace MultiLanguageBench.lsg
       public void setDepthLevel(int level) {
         depthLevel = level;
       }
-      public void setIsReducible(boolean isReducible) {
+      public void setIsReducible(bool isReducible) {
         this.isReducible = isReducible;
       }
 
-      private ObjectSet<BasicBlock>        basicBlocks;
-      private ObjectSet<SimpleLoop>        children;
+      private List<BasicBlock>       basicBlocks;
+      private List<SimpleLoop>       children;
       private SimpleLoop             parent;
       private BasicBlock             header;
 
-      private boolean      isRoot;
-      private boolean      isReducible;
+      private bool         isRootField;
+      private bool         isReducible;
       private int          counter;
       private int          nestingLevel;
       private int          depthLevel;
