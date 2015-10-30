@@ -18,8 +18,8 @@
  * @author matt warren (from the Java port by rhundt)
  */
 
-using cfg.*;
-using java.util.*;
+using System;
+using System.Collections.Generic;
 
 namespace MultiLanguageBench.lsg
 {
@@ -41,7 +41,7 @@ namespace MultiLanguageBench.lsg
     public class LSG {
         public LSG() {
             loopCounter = 0;
-            loops = new ArrayList<SimpleLoop>();
+            loops = new List<SimpleLoop>();
             root = new SimpleLoop();
             root.setNestingLevel(0);
             root.setCounter(loopCounter++);
@@ -55,7 +55,7 @@ namespace MultiLanguageBench.lsg
         }
 
         public void addLoop(SimpleLoop loop) {
-            loops.add(loop);
+            loops.Add(loop);
         }
 
         public void dump() {
@@ -66,13 +66,13 @@ namespace MultiLanguageBench.lsg
             // Simplified for readability purposes.
             loop.dump(indent);
 
-            for (SimpleLoop liter : loop.getChildren())
+            foreach (SimpleLoop liter in loop.getChildren())
                 dumpRec(liter, indent + 1);
         }
 
         public void calculateNestingLevel() {
             // link up all 1st level loops to artificial root node.
-            for (SimpleLoop liter : loops) {
+            foreach (SimpleLoop liter in loops) {
                 if (liter.isRoot()) {
                     continue;
                 }
@@ -87,16 +87,16 @@ namespace MultiLanguageBench.lsg
 
         public void calculateNestingLevelRec(SimpleLoop loop, int depth) {
             loop.setDepthLevel(depth);
-            for (SimpleLoop liter : loop.getChildren()) {
+            foreach (SimpleLoop liter in loop.getChildren()) {
                 calculateNestingLevelRec(liter, depth + 1);
 
-                loop.setNestingLevel(Math.max(loop.getNestingLevel(),
+                loop.setNestingLevel(Math.Max(loop.getNestingLevel(),
                                               1 + liter.getNestingLevel()));
             }
         }
 
         public int getNumLoops() {
-            return loops.size();
+            return loops.Count;
         }
         public SimpleLoop getRoot() {
             return root;
