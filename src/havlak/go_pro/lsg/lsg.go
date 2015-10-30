@@ -19,7 +19,7 @@
 package lsg
 
 import "fmt"
-import "./basicblock"
+import "../basicblock"
 
 //======================================================
 // Scaffold Code
