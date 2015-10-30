@@ -18,7 +18,8 @@
  * @author matt warren (from the Java port by rhundt)
  */
 
-using java.util.*;
+using System;
+using System.Collections.Generic;
 
 namespace MultiLanguageBench.cfg
 {
@@ -30,7 +31,6 @@ namespace MultiLanguageBench.cfg
      */
     public class BasicBlock
     {
-
         static int numBasicBlocks = 0;
 
         public static int getNumBasicBlocks()
@@ -41,31 +41,31 @@ namespace MultiLanguageBench.cfg
         public BasicBlock(int name)
         {
             this.name = name;
-            inEdges = new ArrayList<BasicBlock>(2);
-            outEdges = new ArrayList<BasicBlock>(2);
+            inEdges = new List<BasicBlock>(2);
+            outEdges = new List<BasicBlock>(2);
             ++numBasicBlocks;
         }
 
         public void dump()
         {
-            System.out.format("BB#%03d: ", getName());
-            if (inEdges.size() > 0)
+            Console.Write("BB#{0,3}: ", getName()); //"%03d"
+            if (inEdges.Count > 0)
             {
-                System.out.format("in : ");
-                for (BasicBlock bb : inEdges)
+                Console.Write("in : ");
+                foreach (BasicBlock bb in inEdges)
                 {
-                    System.out.format("BB#%03d ", bb.getName());
+                    Console.Write("BB#{0,3} ", bb.getName()); // %03d
                 }
             }
-            if (outEdges.size() > 0)
+            if (outEdges.Count > 0)
             {
-                System.out.format("out: ");
-                for (BasicBlock bb : outEdges)
+                Console.Write("out: ");
+                foreach (BasicBlock bb in outEdges)
                 {
-                    System.out.format("BB#%03d ", bb.getName());
+                    Console.Write("BB#{0,3} ", bb.getName()); // %03d
                 }
             }
-            System.out.println();
+            Console.WriteLine();
         }
 
         public int getName()
@@ -84,20 +84,20 @@ namespace MultiLanguageBench.cfg
 
         public int getNumPred()
         {
-            return inEdges.size();
+            return inEdges.Count;
         }
         public int getNumSucc()
         {
-            return outEdges.size();
+            return outEdges.Count;
         }
 
         public void addOutEdge(BasicBlock to)
         {
-            outEdges.add(to);
+            outEdges.Add(to);
         }
         public void addInEdge(BasicBlock from)
         {
-            inEdges.add(from);
+            inEdges.Add(from);
         }
 
         private List<BasicBlock> inEdges, outEdges;
